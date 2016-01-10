@@ -7,6 +7,8 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_native_dialog.h>
+#include "tinyxml2.h"
+#include <Otter.h>
 
 #include <iostream>
 #include <string>
@@ -15,6 +17,7 @@
 #include "Globals.h"
 
 using namespace std;
+using namespace tinyxml2;
 
 //FILE PATHS
 #define FONTPATH "fonts/"
@@ -29,7 +32,7 @@ ALLEGRO_DISPLAY *DISPLAY = NULL;
 int MPOS_X = -1;
 int MPOS_Y = -1;
 
-//Init Allegro Audio. Exits if failure.
+/*Init Allegro Audio. Exits if failure.*/
 void initAudio()
 {
 	if (!al_install_audio()) {
@@ -51,7 +54,7 @@ void initAudio()
 	}
 }
 
-//Init Allegro Images. Exits if failure.
+/*Init Allegro Images. Exits if failure.*/
 void initImages()
 {
 	if (!al_init_image_addon()) {
@@ -61,7 +64,7 @@ void initImages()
 	}
 }
 
-//init Allegro Display. Exits if failure.
+/*init Allegro Display. Exits if failure.*/
 void initDisplay()
 {
 	//Init Display and window name
@@ -75,7 +78,9 @@ void initDisplay()
 	}
 }
 
-//Init Allegro Fonts. Pass in list of font names and return vector of allego fonts. Exits if failure.
+/*Init Allegro Fonts. Exits if failure
+Parameters: List of font names
+Returns: vector of allego fonts.*/
 vector<ALLEGRO_FONT*> initFonts(vector<string> fontnames)
 {
 	vector<ALLEGRO_FONT*> f;
@@ -150,6 +155,43 @@ int main(int argc, char** argv)
 	bool done = false;
 	//set to true if drawing next frame
 	bool draw = false;
+
+	/*
+	gSystem = new Otter::System(2 * 1024 * 1024);
+	gRenderer = new D3DRenderer();
+	gFileSys = new SampleFileSystem();
+	gSystemHandler = new SampleSystemHandler();
+
+	gSystem->SetRenderer(gRenderer);
+	gSystem->SetFileSystem(gFileSys);
+	gSystem->SetSystemHandler(gSystemHandler);
+	*/
+
+	//open test.xml
+	XMLDocument doc;
+	doc.LoadFile("test.xml");
+	if (doc.ErrorID())
+	{
+		cout << "xml file not found" << endl;
+		exit(1);
+	}
+	//loop through all book authors
+	XMLElement *bookstore = doc.FirstChildElement();
+	for (XMLElement* child = bookstore->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
+	{
+		const char* author = child->FirstChildElement("author")->GetText();
+		const char* gender = child->FirstChildElement("author")->Attribute("gender");
+		// do something with each child element
+		if (author && gender)
+		{
+			cout << author << endl;
+			cout << gender << endl << endl;
+		}
+		else
+		{
+			cout << "author or/and gender could not be found" << endl;
+		}
+	}
 
 	al_start_timer(timer);
 	while (!done)
