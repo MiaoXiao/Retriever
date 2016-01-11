@@ -154,6 +154,9 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="GuiFileSystem.cpp" />
+    <ClCompile Include="GuiManager.cpp" />
+    <ClCompile Include="GuiRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -171,6 +174,9 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="GuiFileSystem.h" />
+    <ClInclude Include="GuiManager.h" />
+    <ClInclude Include="GuiRenderer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
