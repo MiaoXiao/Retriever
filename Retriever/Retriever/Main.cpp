@@ -7,13 +7,13 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_native_dialog.h>
-#include "tinyxml2.h"
 #include <Otter.h>
 
 #include <iostream>
 #include <string>
 #include <vector>
 
+#include "tinyxml2.h"
 #include "Globals.h"
 
 using namespace std;
@@ -28,9 +28,10 @@ using namespace tinyxml2;
 #define FPS 60
 ALLEGRO_DISPLAY *DISPLAY = NULL;
 
-//current mouse position
-int MPOS_X = -1;
-int MPOS_Y = -1;
+//Current x mouse position
+int MPOSX = -1;
+//Current y mouse position
+int MPOSY = -1;
 
 /*Init Allegro Audio. Exits if failure.*/
 void initAudio()
@@ -64,7 +65,7 @@ void initImages()
 	}
 }
 
-/*init Allegro Display. Exits if failure.*/
+/*Init Allegro Display. Exits if failure.*/
 void initDisplay()
 {
 	//Init Display and window name
@@ -216,8 +217,8 @@ int main(int argc, char** argv)
 				}
 				break;
 			case ALLEGRO_EVENT_MOUSE_AXES:
-				MPOS_X = events.mouse.x;
-				MPOS_Y = events.mouse.y;
+				MPOSX = events.mouse.x;
+				MPOSY = events.mouse.y;
 				break;
 			case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 				break;
@@ -227,7 +228,7 @@ int main(int argc, char** argv)
 			}
 		}
 
-		//DRAW CALLS
+		//draw calls
 		if (draw)
 		{
 			draw = false;
