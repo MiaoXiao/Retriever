@@ -1,12 +1,6 @@
 #pragma once
 #include "stdafx.h"
 
-#define SCREENWIDTH 1000
-#define SCREENHEIGHT 600
-
-#define TILEWIDTH 20
-#define TILEHEIGHT 20
-
 #include <iostream>
 #include <vector>
 #include <stdlib.h>

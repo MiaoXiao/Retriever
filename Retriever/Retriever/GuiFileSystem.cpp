@@ -7,6 +7,10 @@
 using namespace std;
 using namespace Otter;
 
+GuiFileSystem::GuiFileSystem()
+{
+}
+
 /* @brief Opens a file
 */
 void* GuiFileSystem::Open(const char* szFilename, Otter::AccessFlag flags)

@@ -72,11 +72,11 @@ public:
 
 		//temp changes
 		unsigned int mhChange = 0;
-		unsigned int meChange = 0;
-		unsigned int reacChange = 0;
-		unsigned int sChange = 0;
-		unsigned int rChange = 0;
-		unsigned int eChange = 0;
+		int meChange = 0;
+		int reacChange = 0;
+		int sChange = 0;
+		int rChange = 0;
+		int eChange = 0;
 
 		std::cout << statPoints << " stat points to allocate." << std::endl;
 

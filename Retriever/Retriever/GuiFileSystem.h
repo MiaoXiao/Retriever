@@ -5,25 +5,25 @@
 class GuiFileSystem: public Otter::IFileSystem
 {
 public:
-	//GuiFileSystem(void);
+	GuiFileSystem();
 	//~GuiFileSystem(void);
 
 	/* @brief Opens a file*/
-	virtual void* Open(const char* szFilename, Otter::AccessFlag flags) = 0;
+	void* Open(const char* szFilename, Otter::AccessFlag flags);
 
 	/* @brief Closes the file*/
-	virtual void Close(void* pHandle) = 0;
+	void Close(void* pHandle);
 
 	/* @brief Reads data from the file.*/
-	virtual uint32 Read(void* pHandle, uint8* data, uint32 count) = 0;
+	uint32 Read(void* pHandle, uint8* data, uint32 count);
 
 	/* @brief Writes data to the file.*/
-	virtual uint32 Write(void* pHandle, uint8* data, uint32 count) = 0;
+	uint32 Write(void* pHandle, uint8* data, uint32 count);
 
 	/* @brief Seeks within the file.*/
-	virtual void Seek(void* pHandle, uint32 offset, Otter::SeekFlag seekFlag) = 0;
+	void Seek(void* pHandle, uint32 offset, Otter::SeekFlag seekFlag);
 
 	/* @brief Returns the size of the file*/
-	virtual uint32 Size(void* pHandle) = 0;
+	uint32 Size(void* pHandle);
 };
 

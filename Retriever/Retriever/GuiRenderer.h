@@ -7,6 +7,10 @@
 class GuiRenderer : public Otter::IRenderer
 {
 public:
+	/*CONSTRUCTOR: Pass in display*/
+	GuiRenderer(ALLEGRO_DISPLAY* display)
+		:display(display) {}
+
 	/* Loads a texture with the specified id and path. Exits if failure
 	Parameter: ID of texture, source path of texture*/
 	virtual void OnLoadTexture(int textureID, const char* szPath);
@@ -28,5 +32,6 @@ public:
 
 private:
 	//List of all current texture Ids
-	std::map<int, ALLEGRO_BITMAP> textureList;
+	std::map<int, ALLEGRO_BITMAP*> textureList;
+	ALLEGRO_DISPLAY *display;
 };
