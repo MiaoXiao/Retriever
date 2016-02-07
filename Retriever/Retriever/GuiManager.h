@@ -7,24 +7,30 @@
 #include <vector>
 #include <map>
 
-#include "Interface.h"
+#include "Entity.h"
+#include "GuiInterface.h"
 #include "Globals.h"
 
 /*Manages and displays graphic user interface elements*/
 class GuiManager
 {
 public:
-	/*CONSTRUCTOR: */
-	GuiManager(ALLEGRO_BITMAP* buffer);
+	/*CONSTRUCTOR:*/
+	GuiManager();
 
-	/*Create interface for permanent use. Add interface to list given unique id
-	Parameters: buffer for drawing, position of bitmap, path of bitmap*/
-	void createInterface(const Position p, const std::string path);
+	/*Create interface for permanent use.
+	Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
+	void createInterface(ALLEGRO_BITMAP* buffer, 
+		const Position position, const Position scale,
+		const std::string path, 
+		const unsigned int menu);
 
+	/*Draw all non hidden interfaces and its non hidden children.*/
+	void drawInterfaces();
 private:
 	//pointer to draw screen
 	ALLEGRO_BITMAP* buffer;
 	//stores all interfaces which may display in game
-	std::vector<Interface> interfaceList;
+	std::vector<GuiInterface> interfaceList;
 };
 

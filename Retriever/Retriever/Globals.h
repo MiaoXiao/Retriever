@@ -10,7 +10,6 @@
 #include <vector>
 #include <stdlib.h>
 
-
 namespace Globals
 {
 	//No stat can go past this cap

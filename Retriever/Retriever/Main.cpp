@@ -13,6 +13,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "GuiManager.h"
 #include "tinyxml2.h"
 #include "Globals.h"
 
@@ -28,11 +29,11 @@ using namespace tinyxml2;
 #define FPS 60
 ALLEGRO_DISPLAY *DISPLAY = NULL;
 
-//resoultion
+//Resoultions
 unsigned int WINDOWWIDTH = 1300;
 unsigned int WINDOWHEIGHT = 700;
-unsigned int SCREENWIDTH = 1300;
-unsigned int SCREENHEIGHT = 500;
+unsigned int SCREENWIDTH = WINDOWWIDTH;
+unsigned int SCREENHEIGHT = WINDOWHEIGHT;
 
 //color
 struct COLOR
@@ -163,7 +164,7 @@ int main(int argc, char** argv)
 	ALLEGRO_BITMAP* drawing = loadImage("Images", "picture.png");
 
 	//SCREENWIDTH = al_get_display_width(DISPLAY);
-	//SCREENHEIGHT = al_get_display_height(DISPLAY);
+	SCREENHEIGHT -= 100;
 
 	// calculate scaling factor
 	int sx = WINDOWWIDTH / SCREENWIDTH;
@@ -175,16 +176,6 @@ int main(int argc, char** argv)
 	int scaleH = SCREENHEIGHT * scale;
 	int scaleX = (WINDOWWIDTH - scaleW) / 2;
 	int scaleY = (WINDOWHEIGHT - scaleH) / 2;
-
-	// render a frame
-	al_set_target_bitmap(buffer);
-	al_clear_to_color(color.white);
-
-	// draw everything in between here
-	al_draw_bitmap(drawing, SCREENWIDTH / 2, SCREENHEIGHT / 2, 0);
-
-	al_set_target_backbuffer(DISPLAY);
-	al_clear_to_color(color.black);
 
 	//fonts in the game
 	vector<string> fontnames;
@@ -233,6 +224,12 @@ int main(int argc, char** argv)
 		}
 	}*/
 
+	GuiManager guimanager;
+
+	Position p(SCREENWIDTH / 2, SCREENHEIGHT / 2);
+	Position s;
+	guimanager.createInterface(buffer, p, s, "Images/gui.png", 0);
+
 	al_start_timer(timer);
 	while (!done)
 	{
@@ -271,6 +268,18 @@ int main(int argc, char** argv)
 		if (draw)
 		{
 			draw = false;
+
+			// render a frame
+			al_set_target_bitmap(buffer);
+			al_clear_to_color(color.white);
+
+			// draw everything in between here
+			al_draw_bitmap(drawing, SCREENWIDTH / 2, SCREENHEIGHT / 2, 0);
+			guimanager.drawInterfaces();
+
+			al_set_target_backbuffer(DISPLAY);
+			al_clear_to_color(color.black);
+
 			al_draw_scaled_bitmap(buffer, 0, 0, SCREENWIDTH, SCREENHEIGHT, scaleX, scaleY, scaleW, scaleH, 0);
 
 			al_flip_display();

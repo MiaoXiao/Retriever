@@ -9,7 +9,6 @@ using namespace std;
 GameObject::GameObject()
 	:name(NULL), description(NULL), id(NULL)
 {
-
 }
 
 /*Return game object name*/
