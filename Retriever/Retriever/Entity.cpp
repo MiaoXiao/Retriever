@@ -4,21 +4,26 @@
 using namespace std;
 
 //----------------------------PUBLIC----------------------------//
+/*CONSTRUCTOR: */
+Entity::Entity()
+{
+	
+}
 
-/*Return entity name*/
-string Entity::get_Name() const { return name; }
-/*Change entity name*/
-void Entity::set_Name(const std::string v) { name = v; }
-
-/*Return entity description*/
-std::string Entity::get_Description() const { return description; }
-/*Change entity descriptionn*/
-void Entity::set_Description(const std::string v) { description = v; }
-
-/*Returns entity ID*/
-unsigned int Entity::get_Id() const { return id; }
-/*Change entity ID*/
-void Entity::set_Id(unsigned int v) { id = v; }
+/*Load an image from disk
+Parameters: name of path. name of file
+Returns: pointer to bitmap*/
+void Entity::loadImage(string path)
+{
+	bm = al_load_bitmap(path.c_str());
+	if (!bm)
+	{
+		cerr << "Could not load " << path << endl;
+		al_rest(20);
+		exit(1);
+	}
+	
+}
 
 //----------------------------PROTECTED----------------------------//
 
