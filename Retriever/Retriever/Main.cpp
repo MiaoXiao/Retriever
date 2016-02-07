@@ -7,13 +7,14 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_native_dialog.h>
-#include "tinyxml2.h"
-#include <Otter.h>
 
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
+#include "GuiManager.h"
+#include "tinyxml2.h"
 #include "Globals.h"
 
 using namespace std;
@@ -28,9 +29,23 @@ using namespace tinyxml2;
 #define FPS 60
 ALLEGRO_DISPLAY *DISPLAY = NULL;
 
-//current mouse position
-int MPOS_X = -1;
-int MPOS_Y = -1;
+//Resoultions
+unsigned int WINDOWWIDTH = 1300;
+unsigned int WINDOWHEIGHT = 700;
+unsigned int SCREENWIDTH = WINDOWWIDTH;
+unsigned int SCREENHEIGHT = WINDOWHEIGHT;
+
+//color
+struct COLOR
+{
+	ALLEGRO_COLOR black = al_map_rgb(0, 0, 0);
+	ALLEGRO_COLOR white = al_map_rgb(255, 255, 255);
+};
+
+//Current x mouse position
+int MPOSX = -1;
+//Current y mouse position
+int MPOSY = -1;
 
 /*Init Allegro Audio. Exits if failure.*/
 void initAudio()
@@ -64,12 +79,12 @@ void initImages()
 	}
 }
 
-/*init Allegro Display. Exits if failure.*/
+/*Init Allegro Display. Exits if failure.*/
 void initDisplay()
 {
 	//Init Display and window name
 	al_set_app_name(APPNAME);
-	DISPLAY = al_create_display(SCREENWIDTH, SCREENHEIGHT);
+	DISPLAY = al_create_display(WINDOWWIDTH, WINDOWHEIGHT);
 	if (!DISPLAY)
 	{
 		al_show_native_message_box(DISPLAY, "Error", "Error", "Failed to create display!",
@@ -111,15 +126,21 @@ vector<ALLEGRO_FONT*> initFonts(vector<string> fontnames)
 //draw fonts
 //al_draw_text(font24, Color.yellow, 50, 50, 0, "Hi!!!!");
 
-/*
-ALLEGRO_BITMAP *star = al_load_bitmap("images/star.png");
-if (!star)
+/*Load an image from disk
+Parameters: name of path. name of file
+Returns: pointer to bitmap*/
+ALLEGRO_BITMAP* loadImage(string path, string filename)
 {
-al_show_native_message_box(DISPLAY, "Error", "Error", "Failed to load star!",
-NULL, ALLEGRO_MESSAGEBOX_ERROR);
-al_destroy_display(DISPLAY);
-exit(1);
-}*/
+	string fullpath = path + "/" + filename;
+	ALLEGRO_BITMAP *bm = al_load_bitmap(fullpath.c_str());
+	if (!bm)
+	{
+		cerr << "Could not load " << fullpath << endl;
+		al_rest(20);
+		exit(1);
+	}
+	return bm;
+}
 
 int main(int argc, char** argv)
 {
@@ -131,9 +152,30 @@ int main(int argc, char** argv)
 		exit(1);
 	}
 
+	COLOR color;
 	initAudio();
 	initImages();
 	initDisplay();
+
+	//buffer for entire game
+	ALLEGRO_BITMAP* buffer = al_create_bitmap(SCREENWIDTH, SCREENHEIGHT);
+	
+	//sample
+	ALLEGRO_BITMAP* drawing = loadImage("Images", "picture.png");
+
+	//SCREENWIDTH = al_get_display_width(DISPLAY);
+	SCREENHEIGHT -= 100;
+
+	// calculate scaling factor
+	int sx = WINDOWWIDTH / SCREENWIDTH;
+	int sy = WINDOWHEIGHT / SCREENHEIGHT;
+	int scale = min(sx, sy);
+
+	// calculate how much the buffer should be scaled
+	int scaleW = SCREENWIDTH * scale;
+	int scaleH = SCREENHEIGHT * scale;
+	int scaleX = (WINDOWWIDTH - scaleW) / 2;
+	int scaleY = (WINDOWHEIGHT - scaleH) / 2;
 
 	//fonts in the game
 	vector<string> fontnames;
@@ -145,8 +187,7 @@ int main(int argc, char** argv)
 
 	//Event Queue
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
-	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
-	event_queue = al_create_event_queue();
+	ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_mouse_event_source());
@@ -154,19 +195,9 @@ int main(int argc, char** argv)
 	//set to true of exiting game
 	bool done = false;
 	//set to true if drawing next frame
-	bool draw = false;
+	bool draw = false;	
 
 	/*
-	gSystem = new Otter::System(2 * 1024 * 1024);
-	gRenderer = new D3DRenderer();
-	gFileSys = new SampleFileSystem();
-	gSystemHandler = new SampleSystemHandler();
-
-	gSystem->SetRenderer(gRenderer);
-	gSystem->SetFileSystem(gFileSys);
-	gSystem->SetSystemHandler(gSystemHandler);
-	*/
-
 	//open test.xml
 	XMLDocument doc;
 	doc.LoadFile("test.xml");
@@ -191,7 +222,13 @@ int main(int argc, char** argv)
 		{
 			cout << "author or/and gender could not be found" << endl;
 		}
-	}
+	}*/
+
+	GuiManager guimanager;
+
+	Position p(SCREENWIDTH / 2, SCREENHEIGHT / 2);
+	Position s;
+	guimanager.createInterface(buffer, p, s, "Images/gui.png", 0);
 
 	al_start_timer(timer);
 	while (!done)
@@ -216,8 +253,8 @@ int main(int argc, char** argv)
 				}
 				break;
 			case ALLEGRO_EVENT_MOUSE_AXES:
-				MPOS_X = events.mouse.x;
-				MPOS_Y = events.mouse.y;
+				MPOSX = events.mouse.x;
+				MPOSY = events.mouse.y;
 				break;
 			case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 				break;
@@ -227,12 +264,25 @@ int main(int argc, char** argv)
 			}
 		}
 
-		//DRAW CALLS
+		//draw calls
 		if (draw)
 		{
 			draw = false;
+
+			// render a frame
+			al_set_target_bitmap(buffer);
+			al_clear_to_color(color.white);
+
+			// draw everything in between here
+			al_draw_bitmap(drawing, SCREENWIDTH / 2, SCREENHEIGHT / 2, 0);
+			guimanager.drawInterfaces();
+
+			al_set_target_backbuffer(DISPLAY);
+			al_clear_to_color(color.black);
+
+			al_draw_scaled_bitmap(buffer, 0, 0, SCREENWIDTH, SCREENHEIGHT, scaleX, scaleY, scaleW, scaleH, 0);
+
 			al_flip_display();
-			al_clear_to_color(al_map_rgb(255, 255, 255));
 		}
 
 	}

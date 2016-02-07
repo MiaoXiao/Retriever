@@ -1,13 +1,12 @@
 #pragma once
 #include "stdafx.h"
 
-#define SCREENWIDTH 1000
-#define SCREENHEIGHT 600
-
-#define TILEWIDTH 20
-#define TILEHEIGHT 20
+#include <allegro5/allegro5.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_native_dialog.h>
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <stdlib.h>
 
