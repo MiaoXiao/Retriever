@@ -1,4 +1,10 @@
-﻿  GuiManager.cpp
+﻿  GuiInterface.cpp
   GuiBox.cpp
   Generating Code...
+  Compiling...
+  GuiManager.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  GuiChild.cpp
+  Main.cpp
   Retriever.vcxproj -> C:\Users\Rica.PENGIN\Documents\Visual Studio 2015\Projects\Retriever\Retriever\Debug\Retriever.exe

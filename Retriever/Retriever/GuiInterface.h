@@ -19,7 +19,6 @@ public:
 		const std::string path,
 		const unsigned int id);
 
-
 	/*Adds child gui to this interface, given the offset
 	Parameter: Offset to place child element, scale of new child, filename*/
 	void addChild(Position offset, Position scale, const std::string path);

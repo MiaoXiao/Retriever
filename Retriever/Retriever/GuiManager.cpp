@@ -17,7 +17,7 @@ void GuiManager::createInterface(ALLEGRO_BITMAP* buffer,
 {
 	GuiInterface i(buffer, position, scale, path, interfaceList.size());
 	
-	//Menu 0: create a child menu 50% smaller in the center of the parent interface
+	//Menu 0: test menu, offset at 20 20
 	switch (menu)
 	{
 	case 0:
@@ -30,18 +30,24 @@ void GuiManager::createInterface(ALLEGRO_BITMAP* buffer,
 	interfaceList.push_back(i);
 }
 
+/*Check Handlers: visible on/off, switching interfaces, buttons*/
+void GuiManager::checkHandlers()
+{
+
+}
+
 /*Draw all non hidden interfaces and its non hidden children.*/
 void GuiManager::drawInterfaces()
 {
 	for (unsigned int i = 0; i < interfaceList.size(); ++i)
 	{
-		if (interfaceList[i].active)
+		if (interfaceList[i].visible)
 		{
 			//cout << "drawing interface" << endl;
 			interfaceList[i].drawGui();
 			for (unsigned int j = 0; j < interfaceList[i].childList.size(); ++j)
 			{
-				if (interfaceList[i].childList[j].active)
+				if (interfaceList[i].childList[j].visible)
 				{
 					//cout << "drawing child" << endl;
 					interfaceList[i].childList[j].drawGui();

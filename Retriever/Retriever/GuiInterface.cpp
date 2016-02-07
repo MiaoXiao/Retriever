@@ -12,6 +12,7 @@ GuiInterface::GuiInterface(ALLEGRO_BITMAP* buffer,
 	const unsigned int id)
 	:GuiBox(buffer, position, scale, path, id)
 {
+	isInterface = true;
 }
 
 /*Adds child gui to this interface, given the offset

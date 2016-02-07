@@ -11,13 +11,7 @@ GuiChild::GuiChild(const Position position, const Position scale,
 	const unsigned int id)
 	:GuiBox(NULL, position, scale, path, id)
 {
-}
-
-/*Hide or show this gui child
-Parameter: set to true if hiding*/
-void GuiChild::setActive(bool b)
-{
-	active = b;
+	isInterface = false;
 }
 
 //----------------------------PROTECTED----------------------------//

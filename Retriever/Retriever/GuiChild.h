@@ -11,9 +11,6 @@ public:
 		const std::string path, 
 		const unsigned int id);
 
-	/*Hide or show this gui child
-	Parameter: set to true if hiding*/
-	void setActive(bool b);
 private:
 };
 

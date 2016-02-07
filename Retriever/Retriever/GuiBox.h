@@ -17,7 +17,11 @@ public:
 
 	/*Hides or shows gui element
 	Parameters: set to true if hiding*/
-	void setActive(bool b);
+	void setVisible(bool b);
+
+	/*Intall activate handler for this box
+	Parameters: handler type, optional key */
+	void installHandler(unsigned int type, unsigned int key);
 
 	/*Draw this GUI*/
 	void drawGui();
@@ -31,9 +35,14 @@ public:
 	ALLEGRO_BITMAP* buffer;
 
 	//set to true if box should display
-	bool active;
+	bool visible;
+
 protected:
+	//set to true if interface
+	bool isInterface;
 
 private:
+	//key code to turn interface/box visible or invisible
+	unsigned int keyCodeActivate;
 };
 
