@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "GameObject.h"
 #include "Globals.h"
 
 #include <iostream>
@@ -613,8 +613,8 @@ public:
 	}
 };
 
-//Any Entity that can fight in battle
-class Character : public Entity
+//Any Game Object that can fight in battle
+class Character : public GameObject
 {
 public:
 	//Pronoun for prompts

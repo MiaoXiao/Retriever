@@ -117,23 +117,6 @@ vector<ALLEGRO_FONT*> initFonts(vector<string> fontnames)
 	return f;
 }
 
-/*Load an image.
-Parameters: name of path. name of file
-Returns: pointer to bitmap*/
-ALLEGRO_BITMAP* loadImage(string path, string filename)
-{
-	string fullpath = path + "/" + filename;
-	ALLEGRO_BITMAP *bm = al_load_bitmap(fullpath.c_str());
-	if (!bm)
-	{
-		al_show_native_message_box(DISPLAY, "Error", "Error", ("Failed to load: " + fullpath).c_str(),
-			NULL, ALLEGRO_MESSAGEBOX_ERROR);
-		al_destroy_display(DISPLAY);
-		exit(1);
-	}
-	return bm;
-}
-
 //EXAMPLE CODE
 //draw circle
 //al_draw_filled_circle(w / 2, h / 2, 30, Color.yellow);
@@ -142,6 +125,21 @@ ALLEGRO_BITMAP* loadImage(string path, string filename)
 //draw fonts
 //al_draw_text(font24, Color.yellow, 50, 50, 0, "Hi!!!!");
 
+/*Load an image from disk
+Parameters: name of path. name of file
+Returns: pointer to bitmap*/
+ALLEGRO_BITMAP* loadImage(string path, string filename)
+{
+	string fullpath = path + "/" + filename;
+	ALLEGRO_BITMAP *bm = al_load_bitmap(fullpath.c_str());
+	if (!bm)
+	{
+		cerr << "Could not load " << fullpath << endl;
+		al_rest(20);
+		exit(1);
+	}
+	return bm;
+}
 
 int main(int argc, char** argv)
 {
@@ -184,6 +182,9 @@ int main(int argc, char** argv)
 
 	// draw everything in between here
 	al_draw_bitmap(drawing, SCREENWIDTH / 2, SCREENHEIGHT / 2, 0);
+
+	al_set_target_backbuffer(DISPLAY);
+	al_clear_to_color(color.black);
 
 	//fonts in the game
 	vector<string> fontnames;
@@ -270,9 +271,6 @@ int main(int argc, char** argv)
 		if (draw)
 		{
 			draw = false;
-
-			al_set_target_backbuffer(DISPLAY);
-			al_clear_to_color(color.black);
 			al_draw_scaled_bitmap(buffer, 0, 0, SCREENWIDTH, SCREENHEIGHT, scaleX, scaleY, scaleW, scaleH, 0);
 
 			al_flip_display();
