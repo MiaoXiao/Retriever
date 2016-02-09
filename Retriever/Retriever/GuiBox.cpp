@@ -8,29 +8,24 @@ using namespace std;
 /*Constructor: Set status of interface, pass off vars to Entity*/
 GuiBox::GuiBox(ALLEGRO_BITMAP* buffer,
 	const Position position, const Position scale,
-	const string path,
-	const unsigned int id)
-	:Entity(position, scale, path), keyCodeActivate(NULL)
+	const std::string path,
+	const unsigned int id,
+	const bool isInterface)
+	:Entity(position, scale, path), buffer(buffer), isInterface(isInterface)
 {
-	if (buffer != NULL) buffer = buffer;
-	setVisible(true);
+	visible = true;
 }
 
 /*Hides or shows gui element. If visible and an interface, make it the active interface
-Parameters: set to true if hiding*/
-void GuiBox::setVisible(bool b)
+Parameters: set to true if hiding
+Returns: true if this is the new active interface*/
+bool GuiBox::setVisible(bool b)
 { 
 	visible = b;
+	return isInterface && b;
 }
 
-/*Install activate handler for this box
-Parameters: handler type, optional key */
-void GuiBox::installHandler(unsigned int type, unsigned int key)
-{
-	keyCodeActivate = key;
-}
-
-/*Draw this GUI*/
+/*Draw this Gui Box*/
 void GuiBox::drawGui()
 {
 	al_draw_bitmap(bm, position.get_x(), position.get_y(), 0);
@@ -51,6 +46,19 @@ void GuiBox::resetInterface()
 
 }
 
+/*Install activate handler for this box, by adding to the handlerList
+Parameters: handler type, optional key that handler is responsible for */
+void GuiBox::installHandler(unsigned int type, unsigned int key)
+{
+	handlerList[key] = type;
+}
+
+/*Check all handlers to see if event has occured
+Parameters: key that was pressed this tick*/
+void GuiBox::checkHandlers(unsigned int key)
+{
+
+}
 
 //----------------------------PROTECTED----------------------------//
 

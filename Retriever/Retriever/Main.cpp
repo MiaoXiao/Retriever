@@ -228,7 +228,7 @@ int main(int argc, char** argv)
 
 	Position p(SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	Position s;
-	guimanager.createInterface(buffer, p, s, "Images/gui.png", 0);
+	guimanager.createGuiBox(buffer, p, s, "Images/gui.png", 0);
 
 	al_start_timer(timer);
 	while (!done)
@@ -250,6 +250,8 @@ int main(int argc, char** argv)
 					break;
 				case ALLEGRO_KEY_R:
 					break;
+				default:
+					guimanager.allHandlers(events.keyboard.keycode);
 				}
 				break;
 			case ALLEGRO_EVENT_MOUSE_AXES:
@@ -273,10 +275,11 @@ int main(int argc, char** argv)
 			al_set_target_bitmap(buffer);
 			al_clear_to_color(color.white);
 
-			// draw everything in between here
+			// Draw these Objects
 			al_draw_bitmap(drawing, SCREENWIDTH / 2, SCREENHEIGHT / 2, 0);
 			guimanager.drawInterfaces();
 
+			//render back display
 			al_set_target_backbuffer(DISPLAY);
 			al_clear_to_color(color.black);
 

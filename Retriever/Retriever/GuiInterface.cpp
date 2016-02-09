@@ -15,15 +15,6 @@ GuiInterface::GuiInterface(ALLEGRO_BITMAP* buffer,
 	isInterface = true;
 }
 
-/*Adds child gui to this interface, given the offset
-Parameter: Offset to place child element, scale of new child, filename*/
-void GuiInterface::addChild(Position offset, Position scale, const std::string path)
-{
-	Position p(position.get_x() + offset.get_x(), position.get_y() + offset.get_y());
-	GuiChild gc(p, scale, path, childList.size());
-	childList.push_back(gc);
-}
-
 //----------------------------PROTECTED----------------------------//
 
 

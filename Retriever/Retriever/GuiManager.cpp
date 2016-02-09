@@ -8,15 +8,17 @@ GuiManager::GuiManager()
 {
 }
 
-/*Create interface for permanent use.
-Parameters: draw buffer, position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
-void GuiManager::createInterface(ALLEGRO_BITMAP* buffer,
+/*Create GuiBox for permanent use.
+Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
+void GuiManager::createGuiBox(ALLEGRO_BITMAP* buffer,
 	const Position position, const Position scale,
 	const string path,
 	const unsigned int menu)
 {
-	GuiInterface i(buffer, position, scale, path, interfaceList.size());
-	
+	GuiBox interface(buffer, position, scale, path, interfaceList.size(), true);
+	//cout << "adding interface" << endl;
+	interfaceList.push_back(interface);
+
 	//Menu 0: test menu, offset at 20 20
 	switch (menu)
 	{
@@ -24,19 +26,13 @@ void GuiManager::createInterface(ALLEGRO_BITMAP* buffer,
 		//create child
 		Position offset(20, 20);
 		Position s;
-		i.addChild(offset, s, path);
+		addChild(interface, offset, s, path);
 		break;
 	}
-	interfaceList.push_back(i);
+	
 }
 
-/*Check Handlers: visible on/off, switching interfaces, buttons*/
-void GuiManager::checkHandlers()
-{
-
-}
-
-/*Draw all non hidden interfaces and its non hidden children.*/
+/*Draw all interfaces and its children.*/
 void GuiManager::drawInterfaces()
 {
 	for (unsigned int i = 0; i < interfaceList.size(); ++i)
@@ -45,14 +41,32 @@ void GuiManager::drawInterfaces()
 		{
 			//cout << "drawing interface" << endl;
 			interfaceList[i].drawGui();
+			//cout << interfaceList[i].childList.size() << endl;
 			for (unsigned int j = 0; j < interfaceList[i].childList.size(); ++j)
 			{
-				if (interfaceList[i].childList[j].visible)
+				//cout << "checking child" << endl;
+				if (interfaceList[i].childList[j]->visible)
 				{
 					//cout << "drawing child" << endl;
-					interfaceList[i].childList[j].drawGui();
+					interfaceList[i].childList[j]->drawGui();
 				}
 			}
 		}
 	}
+}
+
+/*Handle all keyboard events for any visible Gui elements
+Parameter: Key that was pressed this tick*/
+void GuiManager::allHandlers(unsigned int key)
+{
+}
+
+/*Adds child gui to a GuiBox, given the offset
+Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
+void GuiManager::addChild(GuiBox parent, Position offset, Position scale, const std::string path)
+{
+	Position p(parent.position.get_x() + offset.get_x(), parent.position.get_y() + offset.get_y());
+	GuiBox child(buffer, p, scale, path, parent.childList.size(), false);
+	boxList.push_back(child);
+	parent.childList.push_back(&boxList[boxList.size() - 1]);
 }
