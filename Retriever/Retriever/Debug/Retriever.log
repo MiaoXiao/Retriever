@@ -1,4 +1,10 @@
-﻿  GuiManager.cpp
-  GuiBox.cpp
+﻿  Character.cpp
+c:\users\rica.pengin\documents\visual studio 2015\projects\retriever\retriever\retriever\character.h(169): warning C4018: '<': signed/unsigned mismatch
+c:\users\rica.pengin\documents\visual studio 2015\projects\retriever\retriever\retriever\character.h(199): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  Player.cpp
+c:\users\rica.pengin\documents\visual studio 2015\projects\retriever\retriever\retriever\character.h(169): warning C4018: '<': signed/unsigned mismatch
+c:\users\rica.pengin\documents\visual studio 2015\projects\retriever\retriever\retriever\character.h(199): warning C4018: '<': signed/unsigned mismatch
   Generating Code...
   Retriever.vcxproj -> C:\Users\Rica.PENGIN\Documents\Visual Studio 2015\Projects\Retriever\Retriever\Debug\Retriever.exe

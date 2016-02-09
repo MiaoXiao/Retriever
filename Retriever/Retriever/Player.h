@@ -12,9 +12,8 @@ class Player : public Character
 public:
 	/*CONSTRUCTOR: Initialize instance of player character
 	Parameters: filename for player info, player id*/
-	Player(std::string fn, unsigned int index) :
-		digits(0),
-		fullParty(false)
+	Player(std::string fn, unsigned int index)
+		:digits(0), fullParty(false)
 	{
 		status.set_IsPlayer(true);
 		assign_StartInfo(fn, index);

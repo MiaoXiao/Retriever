@@ -436,7 +436,6 @@ public:
 
 };
 
-
 //Manages current status and any current statis effects for this character.
 struct Status
 {

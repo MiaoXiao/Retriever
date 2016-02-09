@@ -5,12 +5,6 @@ using namespace std;
 
 //----------------------------PUBLIC----------------------------//
 
-/*CONSTRUCTOR: set all variables to null*/
-GameObject::GameObject()
-	:name(NULL), description(NULL), id(NULL)
-{
-}
-
 /*Return game object name*/
 string GameObject::get_Name() const { return name; }
 /*Change game object name*/

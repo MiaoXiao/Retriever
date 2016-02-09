@@ -14,7 +14,7 @@ class GuiBox: public Entity
 public:
 	/*Constructor: Set status of interface, pass off vars to Entity*/
 	GuiBox(ALLEGRO_BITMAP* buffer,
-		const Position position, const Position scale,
+		const Position p, const Position s,
 		const std::string path,
 		const unsigned int id,
 		const bool isInterface);

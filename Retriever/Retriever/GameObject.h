@@ -9,7 +9,7 @@
 class GameObject: public Entity
 {
 public:
-	/*CONSTRUCTOR: set all variables to null*/
+	/*CONSTRUCTOR: default*/
 	GameObject();
 
 	/*Return game object name*/

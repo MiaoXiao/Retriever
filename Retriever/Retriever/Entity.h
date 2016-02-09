@@ -12,6 +12,7 @@ struct Position
 public:
 	/*CONSTRUCTOR: default*/
 	Position() { x = 1; y = 1; }
+
 	/*CONSTRUCTOR: automatically set position*/
 	Position(const float x, const float y)
 		:x(x), y(y) {}
@@ -33,10 +34,8 @@ private:
 class Entity
 {
 public:
-	/*CONSTURCTOR: default*/
-	Entity();
 	/*CONSTRUCTOR: Set position and scale, load image*/
-	Entity(const Position position, const Position scale, const std::string path);
+	Entity(const Position p, const Position s, const std::string path);
 
 	//Top left corner position
 	Position position;

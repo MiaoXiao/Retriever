@@ -4,16 +4,10 @@
 using namespace std;
 
 //----------------------------PUBLIC----------------------------//
-/*CONSTURCTOR: default*/
-Entity::Entity()
-{	
-	position.set(0, 0);
-	scale.set(1, 1);
-}
 
 /*CONSTRUCTOR: Set position and scale, load image*/
-Entity::Entity(Position position, Position scale, const string path)
-	:position(position), scale(scale)
+Entity::Entity(Position p, Position s, const string path)
+	:position(p), scale(s)
 {
 	loadImage(path);
 }

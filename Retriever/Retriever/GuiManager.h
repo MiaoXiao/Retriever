@@ -21,7 +21,7 @@ public:
 	/*Create GuiBox for permanent use.
 	Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
 	void createGuiBox(ALLEGRO_BITMAP* buffer, 
-		const Position position, const Position scale,
+		const Position p, const Position s,
 		const std::string path, 
 		const unsigned int menu);
 
@@ -34,7 +34,7 @@ public:
 
 	/*Adds child gui to a GuiBox, given the offset
 	Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
-	void addChild(GuiBox parent, Position offset, Position scale, const std::string path);
+	void addChild(GuiBox &parent, Position offset, Position scale, const std::string path);
 
 private:
 	//pointer to draw screen

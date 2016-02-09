@@ -11,25 +11,23 @@ GuiManager::GuiManager()
 /*Create GuiBox for permanent use.
 Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
 void GuiManager::createGuiBox(ALLEGRO_BITMAP* buffer,
-	const Position position, const Position scale,
+	const Position p, const Position s,
 	const string path,
 	const unsigned int menu)
 {
-	GuiBox interface(buffer, position, scale, path, interfaceList.size(), true);
-	//cout << "adding interface" << endl;
-	interfaceList.push_back(interface);
+	GuiBox interface(buffer, p, s, path, interfaceList.size(), true);
 
-	//Menu 0: test menu, offset at 20 20
+	//Menu 0: creat test menu, with child 50% smaller in center of parent
 	switch (menu)
 	{
 	case 0:
 		//create child
-		Position offset(20, 20);
-		Position s;
+		Position offset(interface.dimensions.get_x() / 2, interface.dimensions.get_y() / 2);
+		Position s(0.5, 0.5);
 		addChild(interface, offset, s, path);
 		break;
 	}
-	
+	interfaceList.push_back(interface);
 }
 
 /*Draw all interfaces and its children.*/
@@ -63,10 +61,11 @@ void GuiManager::allHandlers(unsigned int key)
 
 /*Adds child gui to a GuiBox, given the offset
 Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
-void GuiManager::addChild(GuiBox parent, Position offset, Position scale, const std::string path)
+void GuiManager::addChild(GuiBox &parent, Position offset, Position scale, const std::string path)
 {
 	Position p(parent.position.get_x() + offset.get_x(), parent.position.get_y() + offset.get_y());
 	GuiBox child(buffer, p, scale, path, parent.childList.size(), false);
 	boxList.push_back(child);
 	parent.childList.push_back(&boxList[boxList.size() - 1]);
+	//cout << "child size: " << parent.childList.size() << endl;
 }

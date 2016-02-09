@@ -227,7 +227,7 @@ int main(int argc, char** argv)
 	GuiManager guimanager;
 
 	Position p(SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	Position s;
+	Position s(1, 1);
 	guimanager.createGuiBox(buffer, p, s, "Images/gui.png", 0);
 
 	al_start_timer(timer);
