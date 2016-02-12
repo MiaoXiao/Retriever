@@ -228,8 +228,8 @@ int main(int argc, char** argv)
 
 	Position p(SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	Position s(1, 1);
-	guimanager.createGuiBox(buffer, p, s, "Images/gui.png", 0);
-
+	guimanager.createInterface(buffer, p, s, "Images/gui.png", 0);
+	
 	al_start_timer(timer);
 	while (!done)
 	{
@@ -251,7 +251,7 @@ int main(int argc, char** argv)
 				case ALLEGRO_KEY_R:
 					break;
 				default:
-					guimanager.allHandlers(events.keyboard.keycode);
+					guimanager.handleGuiEvents(events.keyboard.keycode);
 				}
 				break;
 			case ALLEGRO_EVENT_MOUSE_AXES:

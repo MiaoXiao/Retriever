@@ -18,9 +18,9 @@ public:
 	/*CONSTRUCTOR:*/
 	GuiManager();
 
-	/*Create GuiBox for permanent use.
+	/*Create Interface for permanent use.
 	Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
-	void createGuiBox(ALLEGRO_BITMAP* buffer, 
+	void createInterface(ALLEGRO_BITMAP* buffer, 
 		const Position p, const Position s,
 		const std::string path, 
 		const unsigned int menu);
@@ -28,24 +28,30 @@ public:
 	/*Draw all interfaces and its children.*/
 	void drawInterfaces();
 
-	/*Handle all keyboard events for any visible Gui elements
+	/*Handle all keyboard events for current GUI interface
 	Parameter: Key that was pressed this tick*/
-	void allHandlers(unsigned int key);
+	void handleGuiEvents(const unsigned int key);
 
 	/*Adds child gui to a GuiBox, given the offset
 	Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
-	void addChild(GuiBox &parent, Position offset, Position scale, const std::string path);
+	void addChild(GuiBox &parent, const Position offset, const Position scale, const std::string path);
+
+	//id of active interface
+	int activeInterfaceId;
 
 private:
+
+	/* Checks return status, based on the handler
+	Parameters: current status, reference to guibox for possible edits
+	*/
+	void checkStatus(const unsigned int status, const GuiBox guibox);
+
 	//pointer to draw screen
 	ALLEGRO_BITMAP* buffer;
 
 	//stores all interfaces
-	std::vector<GuiBox> interfaceList;
+	std::vector<GuiBox> allInterfaceList;
 	//stores all children
-	std::vector<GuiBox> boxList;
-
-	//id of active interface
-	unsigned int activeInterface;
+	std::vector<GuiBox> allChildrenList;
 };
 
