@@ -16,12 +16,11 @@ class GuiManager
 {
 public:
 	/*CONSTRUCTOR:*/
-	GuiManager();
+	GuiManager(ALLEGRO_BITMAP* buffer);
 
 	/*Create Interface for permanent use.
 	Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
-	void createInterface(ALLEGRO_BITMAP* buffer, 
-		const Position p, const Position s,
+	void createInterface(const Position p, const Position s,
 		const std::string path, 
 		const unsigned int menu);
 
@@ -51,7 +50,5 @@ private:
 
 	//stores all interfaces
 	std::vector<GuiBox> allInterfaceList;
-	//stores all children
-	std::vector<GuiBox> allChildrenList;
 };
 

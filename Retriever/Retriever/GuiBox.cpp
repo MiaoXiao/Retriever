@@ -11,9 +11,17 @@ GuiBox::GuiBox(ALLEGRO_BITMAP* buffer,
 	const std::string path,
 	const unsigned int id,
 	const bool isInterface)
-	:Entity(p, s, path), buffer(buffer), isInterface(isInterface)
+	:Entity(p, s, path), buffer(buffer), gui_id(id), isInterface(isInterface)
 {
 	visible = true;
+	cout << "creating new guibox: " << endl;
+	if (buffer == NULL)
+	{
+		cerr << "Buffer is null" << endl;
+		al_rest(10);
+		exit(1);
+	}
+	cout << "Gui id: " << id << endl << endl;
 }
 
 /*Hides or shows gui element.
@@ -32,12 +40,17 @@ bool GuiBox::getVisible() const
 /*Draw this Gui Box*/
 void GuiBox::drawGui()
 {
+	//cout << "test dimensions: " << dimensions.get_x() << " " << dimensions.get_y() << endl << endl;
+	//cout << "test position: " << position.get_x() << " " << position.get_y() << endl << endl;
+	//cout << "test scale: " << scale.get_x() << " " << scale.get_y() << endl << endl;
+	//cout << "drawing" << endl;
 	al_draw_scaled_bitmap(bm,
 	0, 0,
 	dimensions.get_x(), dimensions.get_y(),
 	position.get_x(), position.get_y(),
 	dimensions.get_x() * scale.get_x(), dimensions.get_y() * scale.get_y(),
 	0);
+	//cout << "finished drawing" << endl;
 }
 
 /*Reset interface to original values*/

@@ -60,7 +60,7 @@ public:
 	//set to true if interface
 	bool isInterface;
 	//List of children pointers that belong to this box/interface
-	std::vector<GuiBox*> childList;
+	std::vector<GuiBox> childList;
 protected:
 
 private:

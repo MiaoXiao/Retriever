@@ -25,6 +25,14 @@ public:
 	float get_x() const { return x; }
 	float get_y() const { return y; }
 
+	/*Display current coordinates for this position
+	Parameter: name of coordinates*/
+	void display(std::string display)
+	{
+		std::cout << display << std::endl;
+		std::cout << "position_x: " << x << std::endl;
+		std::cout << "position_y: " << y << std::endl << std::endl;
+	}
 private:
 	float x;
 	float y;
@@ -35,7 +43,7 @@ class Entity
 {
 public:
 	/*CONSTRUCTOR: Set position and scale, load image*/
-	Entity(const Position p, const Position s, const std::string path);
+	Entity(Position p, Position s, const std::string path);
 
 	//Top left corner position
 	Position position;

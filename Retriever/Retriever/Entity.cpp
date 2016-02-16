@@ -10,6 +10,9 @@ Entity::Entity(Position p, Position s, const string path)
 	:position(p), scale(s)
 {
 	loadImage(path);
+	p.display("Position");
+	dimensions.display("Dimensions");
+	s.display("Scale");
 }
 
 //----------------------------PROTECTED----------------------------//

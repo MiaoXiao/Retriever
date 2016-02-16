@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 	initDisplay();
 
 	//buffer for entire game
-	ALLEGRO_BITMAP* buffer = al_create_bitmap(SCREENWIDTH, SCREENHEIGHT);
+	ALLEGRO_BITMAP *buffer = al_create_bitmap(SCREENWIDTH, SCREENHEIGHT);
 	
 	//sample
 	ALLEGRO_BITMAP* drawing = loadImage("Images", "picture.png");
@@ -224,11 +224,21 @@ int main(int argc, char** argv)
 		}
 	}*/
 
-	GuiManager guimanager;
+	GuiManager guimanager(buffer);
 
-	Position p(SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	Position s(1, 1);
-	guimanager.createInterface(buffer, p, s, "Images/gui.png", 0);
+	float widthDifference = (WINDOWWIDTH - SCREENWIDTH) / 2;
+	float heightDifference = (WINDOWHEIGHT - SCREENHEIGHT) / 2;
+	//cout << "hd: " << heightDifference << endl;
+	Position p((SCREENWIDTH / 12) + widthDifference, (SCREENHEIGHT / 12) + heightDifference);
+	
+	/*
+	cout << "Screenw: " << SCREENWIDTH << endl;
+	cout << "Screenh: " << SCREENHEIGHT << endl;
+	cout << "Windoww: " << WINDOWWIDTH << endl;
+	cout << "Windowh: " << WINDOWHEIGHT << endl;
+	*/
+	Position s(.75, .75);
+	guimanager.createInterface(p, s, "Images/gui.jpg", 0);
 	
 	al_start_timer(timer);
 	while (!done)
@@ -259,6 +269,7 @@ int main(int argc, char** argv)
 				MPOSY = events.mouse.y;
 				break;
 			case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+				cout << MPOSX << " " << MPOSY << endl;
 				break;
 			case ALLEGRO_EVENT_TIMER:
 				draw = true;
