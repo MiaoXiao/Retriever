@@ -21,7 +21,7 @@ void GuiManager::createInterface(
 	cout << "Creating new interface" << endl;
 	GuiBox interface(buffer, p, s, path, allInterfaceList.size(), true);
 
-	//Menu 0: create test menu, with child 50% smaller in center of parent
+	//Menu test
 	switch (menu)
 	{
 	case 0:
@@ -49,6 +49,9 @@ void GuiManager::createInterface(
 
 		//add activate handler
 		interface.installHandler(Activate, ALLEGRO_KEY_I, true);
+		
+		//add cursor
+		interface.installCursor(2);
 		break;
 	}
 	allInterfaceList.push_back(interface);
@@ -109,6 +112,7 @@ void GuiManager::addChild(GuiBox &parent, const Position offset, const Position 
 	GuiBox child(buffer, p, s, path, parent.childList.size(), false);
 	parent.childList.push_back(child);
 
+	child.parent = &parent;
 	//sif (parent.childList[parent.childList.size() - 1]->getVisible()) cout << "dont " << endl;
 	//cout << "child size: " << parent.childList.size() << endl;
 }

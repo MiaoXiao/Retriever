@@ -41,8 +41,7 @@ public:
 private:
 
 	/* Checks return status, based on the handler
-	Parameters: current status, reference to guibox for possible edits
-	*/
+	Parameters: current status, reference to guibox for possible edits*/
 	void checkStatus(const unsigned int status, const GuiBox guibox);
 
 	//pointer to draw screen

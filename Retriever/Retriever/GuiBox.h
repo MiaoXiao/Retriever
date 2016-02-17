@@ -8,14 +8,14 @@
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 
 //Handler Types
-enum HandlerType {Activate, GuiTransition, Button};
+enum HandlerType {Activate, MoveCursor, GuiTransition, Button};
 
 /*Status Return Types
 SetNewInterface: Determines that this gui is now the new active interface
-InterfaceDeactivated: This gui interface was deactivated
-*/
+InterfaceDeactivated: This gui interface was deactivated*/
 enum StatusType {SetNewInterface = 1, InterfaceDeactivated};
 
 /*Basic gui element*/
@@ -49,7 +49,11 @@ public:
 
 	/*Set an existing specific control handler to true or false
 	Parameters: control handler type, control handler key, set the control handler to true/false*/
-	void setControlHandler(const unsigned int type, const unsigned int key, const bool active);
+	void setControlHandle(const unsigned int type, const unsigned int key, const bool active);
+
+	/*Installs gui with cursur. Fills transition grid with children ids
+	Parameter: n by n size of grid*/
+	void installCursor(unsigned int size);
 
 	/*Check all handlers to see if event has occured.
 	Parameters: key that was pressed this tick, status variable that may be returned*/
@@ -59,6 +63,12 @@ public:
 	int gui_id;
 	//set to true if interface
 	bool isInterface;
+
+	//grid for gui transition
+	std::vector< std::vector<unsigned int> > transitionGrid;
+
+	//pointer to parent
+	GuiBox* parent;
 	//List of children pointers that belong to this box/interface
 	std::vector<GuiBox> childList;
 protected:
@@ -66,12 +76,16 @@ protected:
 private:
 	//draw buffer
 	ALLEGRO_BITMAP* buffer;
+	//cursor picture
+	ALLEGRO_BITMAP* cursor;
 
 	//set to true if box should display
 	bool visible;
 
-	//list of all valid guids to transition to
-	std::vector<unsigned int> transitionList;
+	//set to true if cursor is here
+	bool hasCursor;
+	//Position in grid where cursor is located
+	Position cursorPos;
 
 	//List of all handlers that are only enabled when gui is visible
 	std::map<int, int> handlerList;
@@ -79,6 +93,10 @@ private:
 	//List of all handlers that can be enabled/disabled at any time
 	//value is set to true or false depending on whether it is active or not
 	std::map<int, std::pair<bool, int> > controlHandlerList;
+
+	/*Change which child now has the cursor.
+	Parameters: index of child that currently has the cursor, key that was pressed*/
+	void changeCursor(unsigned int index, unsigned int key);
 
 };
 

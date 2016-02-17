@@ -11,7 +11,7 @@ GuiBox::GuiBox(ALLEGRO_BITMAP* buffer,
 	const std::string path,
 	const unsigned int id,
 	const bool isInterface)
-	:Entity(p, s, path), buffer(buffer), gui_id(id), isInterface(isInterface)
+	:Entity(p, s, path), buffer(buffer), gui_id(id), isInterface(isInterface), hasCursor(false)
 {
 	visible = true;
 	cout << "creating new guibox: " << endl;
@@ -50,13 +50,30 @@ void GuiBox::drawGui()
 	position.get_x(), position.get_y(),
 	dimensions.get_x() * scale.get_x(), dimensions.get_y() * scale.get_y(),
 	0);
+
+	//draw cursor if neccessary
+	if (hasCursor)
+	{
+		if (cursor == NULL) // default cursor
+		{
+			al_draw_filled_rectangle(position.get_x() - 5, position.get_y() - 5,
+				position.get_x() + 15,
+				position.get_y() + 15,
+				al_map_rgb(211, 124, 183));
+		}
+		else //custom cursor
+		{
+
+		}
+	}
+
 	//cout << "finished drawing" << endl;
 }
 
 /*Reset interface to original values*/
 void GuiBox::resetInterface()
 {
-
+	
 }
 
 /*Install activate handler for this box, by adding to the handlerList
@@ -71,13 +88,52 @@ void GuiBox::installHandler(const unsigned int type, const unsigned int key, con
 
 /*Set an existing specific control handler to true or false
 Parameters: control handler type, control handler key, set the control handler to true/false*/
-void GuiBox::setControlHandler(const unsigned int type, const unsigned int key, const bool active)
+void GuiBox::setControlHandle(const unsigned int type, const unsigned int key, const bool active)
 {
 	std::map<int, pair<bool, int> >::iterator it = controlHandlerList.find(key);
 	if (it != controlHandlerList.end())
 	{
 		it->second.first = active;
 	}
+}
+
+/*Installs gui with cursur. Fills transition grid with children ids
+Parameter: n by n size of grid*/
+void GuiBox::installCursor(unsigned int size)
+{
+	if (size == 0 || size == 1)
+	{
+		cerr << "Error with installing cursor: Size of transition grid cannot be " << size << ". " << endl;
+		return;
+	}
+
+	//init transition grid
+	vector<unsigned int> v;
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		transitionGrid.push_back(v);
+	}
+
+	//fill transition grid
+	unsigned int j = 0;
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		cout << j << endl;
+		for (unsigned k = 0; j < childList.size() && k < size; ++k)
+		{
+			transitionGrid[i].push_back(childList[j].gui_id);
+			++j;
+		}
+	}
+
+	childList[0].hasCursor = true;
+	cursorPos.set(0, 0);
+	installHandler(MoveCursor, ALLEGRO_KEY_LEFT, false);
+	installHandler(MoveCursor, ALLEGRO_KEY_RIGHT, false);
+	installHandler(MoveCursor, ALLEGRO_KEY_UP, false);
+	installHandler(MoveCursor, ALLEGRO_KEY_DOWN, false);
+
+	
 }
 
 /*Check all handlers to see if event has occured.
@@ -127,6 +183,18 @@ void GuiBox::checkAllHandlers(const unsigned int key, unsigned int &status)
 				visible = false;
 				if (isInterface) status = InterfaceDeactivated;
 				break;
+			case MoveCursor:
+				//find current cursor
+				for (unsigned int i = 0; i < childList.size(); ++i)
+				{
+					if (childList[i].hasCursor)
+					{
+						changeCursor(i, key);
+						//exit loop
+						i = childList.size();
+					}
+				}
+				break;
 			case Button:
 				break;
 			default:
@@ -141,3 +209,35 @@ void GuiBox::checkAllHandlers(const unsigned int key, unsigned int &status)
 
 
 //----------------------------PRIVATE----------------------------//
+
+/*Change which child now has the cursor.
+Parameters: index of child that currently has the cursor, key that was pressed*/
+void GuiBox::changeCursor(unsigned int index, unsigned int key)
+{
+	int x = cursorPos.get_x();
+	int y = cursorPos.get_y();
+	//cout << "Last pos: " << x << " " << y << endl;
+	childList[transitionGrid[x][y]].hasCursor = false;
+	switch (key)
+	{
+	case ALLEGRO_KEY_UP:
+		if (x + 1 == transitionGrid.size()) x = 0;
+		else x++;
+		break;
+	case ALLEGRO_KEY_RIGHT:
+		if (y + 1 == transitionGrid.size()) y = 0;
+		else y++;
+		break;
+	case ALLEGRO_KEY_DOWN:
+		if (x - 1 == -1) x = transitionGrid.size() - 1;
+		else x--;
+		break;
+	case ALLEGRO_KEY_LEFT:
+		if (y - 1 == -1) y = transitionGrid.size() - 1;
+		else y--;
+		break;
+	}
+	childList[transitionGrid[x][y]].hasCursor = true;
+	cursorPos.set(x, y);
+	//cout << "current cursor pos: " << x << " " << y << endl << endl;
+}
