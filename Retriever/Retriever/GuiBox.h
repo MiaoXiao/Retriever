@@ -51,8 +51,8 @@ public:
 	void setControlHandle(const unsigned int type, const unsigned int key, const bool active);
 
 	/*Installs gui with cursur. Fills transition grid with children ids
-	Parameter: n by n size of grid*/
-	void installCursor(unsigned int size);
+	Parameter: n by n size of grid, whether cursor should horizontally, whether cursor should vertically*/
+	void installCursor(unsigned int size, bool wh, bool wv);
 
 	/*Check all handlers to see if event has occured.
 	Parameters: key that was pressed this tick, status variable that may be returned*/
@@ -75,16 +75,17 @@ protected:
 private:
 	//draw buffer
 	ALLEGRO_BITMAP* buffer;
-	//cursor picture
-	ALLEGRO_BITMAP* cursor;
-
 	//set to true if box should display
 	bool visible;
 
+	//cursor picture
+	ALLEGRO_BITMAP* cursor;
 	//set to true if cursor is here
 	bool hasCursor;
 	//Position in grid where cursor is located
 	Position cursorPos;
+	bool wrapVertical;
+	bool wrapHorizontal;
 
 	//List of all handlers that are only enabled when gui is visible
 	std::map<int, int> handlerList;

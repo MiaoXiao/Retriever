@@ -104,8 +104,8 @@ void GuiBox::setControlHandle(const unsigned int type, const unsigned int key, c
 }
 
 /*Installs gui with cursur. Fills transition grid with children ids
-Parameter: n by n size of grid*/
-void GuiBox::installCursor(unsigned int size)
+Parameter: n by n size of grid, whether cursor should horizontally, whether cursor should vertically*/
+void GuiBox::installCursor(unsigned int size, bool wh, bool wv)
 {
 	if (size == 0 || size == 1)
 	{
@@ -124,7 +124,7 @@ void GuiBox::installCursor(unsigned int size)
 	unsigned int j = 0;
 	for (unsigned int i = 0; i < size; ++i)
 	{
-		cout << j << endl;
+		//cout << j << endl;
 		for (unsigned k = 0; j < childList.size() && k < size; ++k)
 		{
 			transitionGrid[i].push_back(childList[j].gui_id);
@@ -140,6 +140,8 @@ void GuiBox::installCursor(unsigned int size)
 	installHandler(MoveCursor, ALLEGRO_KEY_UP, false);
 	installHandler(MoveCursor, ALLEGRO_KEY_DOWN, false);
 
+	wrapVertical = wv;
+	wrapHorizontal = wh;
 	
 }
 
@@ -223,28 +225,39 @@ void GuiBox::changeCursor(unsigned int index, unsigned int key)
 {
 	int x = cursorPos.get_x();
 	int y = cursorPos.get_y();
-	//cout << "Last pos: " << x << " " << y << endl;
+	int tempx = x;
+	int tempy = y;
+	cout << "Last pos: " << x << " " << y << endl;
 	childList[transitionGrid[x][y]].hasCursor = false;
 	switch (key)
 	{
 	case ALLEGRO_KEY_UP:
-		if (x + 1 == transitionGrid.size()) x = 0;
-		else x++;
+		if (x - 1 != -1) x--;
+		else if (wrapVertical) x = transitionGrid.size() - 1;
 		break;
 	case ALLEGRO_KEY_RIGHT:
-		if (y + 1 == transitionGrid.size()) y = 0;
-		else y++;
+		if (y + 1 != transitionGrid.size()) y++;
+		else if (wrapHorizontal) y = 0;
 		break;
 	case ALLEGRO_KEY_DOWN:
-		if (x - 1 == -1) x = transitionGrid.size() - 1;
-		else x--;
+		if (x + 1 != transitionGrid.size()) x++;
+		else if (wrapVertical) x = 0;
 		break;
 	case ALLEGRO_KEY_LEFT:
-		if (y - 1 == -1) y = transitionGrid.size() - 1;
-		else y--;
+		if (y - 1 != -1) y--;
+		else if (wrapHorizontal) y = transitionGrid.size() - 1;
 		break;
 	}
-	childList[transitionGrid[x][y]].hasCursor = true;
-	cursorPos.set(x, y);
-	//cout << "current cursor pos: " << x << " " << y << endl << endl;
+	
+	//check if there was a change in cursor
+	if (tempx == x && tempy == y)
+	{
+		childList[transitionGrid[x][y]].hasCursor = true;
+	}
+	else
+	{
+		childList[transitionGrid[x][y]].hasCursor = true;
+		cursorPos.set(x, y);
+	}
+	cout << "current cursor pos: " << x << " " << y << endl << endl;
 }

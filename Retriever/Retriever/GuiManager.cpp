@@ -51,7 +51,7 @@ void GuiManager::createInterface(
 		interface.installHandler(Activate, ALLEGRO_KEY_I, true);
 		
 		//add cursor
-		interface.installCursor(2);
+		interface.installCursor(2, false, false);
 		break;
 	}
 	allInterfaceList.push_back(interface);
