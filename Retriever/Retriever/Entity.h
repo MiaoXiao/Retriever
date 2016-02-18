@@ -43,15 +43,17 @@ class Entity
 {
 public:
 	/*CONSTRUCTOR: Set position and scale, load image*/
-	Entity(Position p, Position s, const std::string path);
+	Entity(Position minp, Position s, const std::string path);
+	/*DECONSTRUCTOR*/
+	~Entity();
 
-	//Top left corner position
-	Position position;
-
-	//Dimensions of image, only set after call to loadImage
-	Position dimensions;
-
-	//Scale of image
+	//Top left corner position of bmp
+	Position minPos;
+	//Bottom right corner position of bmp
+	Position maxPos;
+	//Dimensions of bmp
+	Position dimen;
+	//Scale of bmp
 	Position scale;
 
 protected:
@@ -61,7 +63,7 @@ protected:
 	void loadImage(const std::string path);
 
 	//bitmap tied to this entity
-	ALLEGRO_BITMAP* bm;
+	ALLEGRO_BITMAP* bmp;
 private:
 
 };

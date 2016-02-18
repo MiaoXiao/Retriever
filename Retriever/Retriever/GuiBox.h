@@ -32,7 +32,6 @@ public:
 	/*Hides or shows gui element.
 	Parameters: set to true if hiding*/
 	void setVisible(const bool b);
-
 	/*Get box visible status*/
 	bool getVisible() const;
 

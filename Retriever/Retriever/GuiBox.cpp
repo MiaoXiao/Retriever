@@ -13,7 +13,7 @@ GuiBox::GuiBox(ALLEGRO_BITMAP* buffer,
 	const bool isInterface)
 	:Entity(p, s, path), buffer(buffer), gui_id(id), isInterface(isInterface), hasCursor(false)
 {
-	visible = true;
+	visible = false;
 	cout << "creating new guibox: " << endl;
 	if (buffer == NULL)
 	{
@@ -29,6 +29,10 @@ Parameters: set to true if hiding*/
 void GuiBox::setVisible(bool b) 
 {
 	visible = b;
+	for (unsigned int i = 0; i < childList.size(); ++i)
+	{
+		childList[i].setVisible(b);
+	}
 }
 
 /*Get box visible status*/
@@ -44,21 +48,23 @@ void GuiBox::drawGui()
 	//cout << "test position: " << position.get_x() << " " << position.get_y() << endl << endl;
 	//cout << "test scale: " << scale.get_x() << " " << scale.get_y() << endl << endl;
 	//cout << "drawing" << endl;
-	al_draw_scaled_bitmap(bm,
+	/*
+	al_draw_scaled_bitmap(bmp,
 	0, 0,
-	dimensions.get_x(), dimensions.get_y(),
-	position.get_x(), position.get_y(),
-	dimensions.get_x() * scale.get_x(), dimensions.get_y() * scale.get_y(),
+	dimen.get_x(), dimen.get_y(),
+	minPos.get_x(), minPos.get_y(),
+	dimen.get_x() * scale.get_x(), dimen.get_y() * scale.get_y(),
 	0);
-
+	*/
+	al_draw_bitmap(bmp, minPos.get_x(), minPos.get_y(), 0);
 	//draw cursor if neccessary
 	if (hasCursor)
 	{
 		if (cursor == NULL) // default cursor
 		{
-			al_draw_filled_rectangle(position.get_x() - 5, position.get_y() - 5,
-				position.get_x() + 15,
-				position.get_y() + 15,
+			al_draw_filled_rectangle(minPos.get_x() - 5, minPos.get_y() - 5,
+				minPos.get_x() + 15,
+				minPos.get_y() + 15,
 				al_map_rgb(211, 124, 183));
 		}
 		else //custom cursor
@@ -126,6 +132,7 @@ void GuiBox::installCursor(unsigned int size)
 		}
 	}
 
+	//default cursor always at 0x0
 	childList[0].hasCursor = true;
 	cursorPos.set(0, 0);
 	installHandler(MoveCursor, ALLEGRO_KEY_LEFT, false);
@@ -156,10 +163,10 @@ void GuiBox::checkAllHandlers(const unsigned int key, unsigned int &status)
 				switch (it->second.second)
 				{
 				case Activate:
-					visible = !visible;
+					setVisible(!getVisible());
 					if (isInterface)
 					{
-						if (visible) status = SetNewInterface;
+						if (getVisible()) status = SetNewInterface;
 						else status = InterfaceDeactivated;
 					}
 					break;
@@ -180,7 +187,7 @@ void GuiBox::checkAllHandlers(const unsigned int key, unsigned int &status)
 			switch (it->second)
 			{
 			case Activate:
-				visible = false;
+				setVisible(false);
 				if (isInterface) status = InterfaceDeactivated;
 				break;
 			case MoveCursor:
@@ -195,7 +202,7 @@ void GuiBox::checkAllHandlers(const unsigned int key, unsigned int &status)
 					}
 				}
 				break;
-			case Button:
+			case GuiTransition:
 				break;
 			default:
 				cerr << "Invalid GUI handler event." << endl;
