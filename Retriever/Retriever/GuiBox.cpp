@@ -10,28 +10,25 @@ GuiBox::GuiBox(ALLEGRO_BITMAP* buffer,
 	const Position p, const Position s,
 	const std::string path,
 	const unsigned int id,
-	const bool isInterface)
-	:Entity(p, s, path), buffer(buffer), gui_id(id), isInterface(isInterface), hasCursor(false)
+	GuiBox* parent)
+	:Entity(p, s, path), buffer(buffer), gui_id(id), parent(parent), visible(false), hasCursor(false)
 {
-	visible = false;
-	cout << "creating new guibox: " << endl;
 	if (buffer == NULL)
 	{
 		cerr << "Buffer is null" << endl;
 		al_rest(10);
 		exit(1);
 	}
-	cout << "Gui id: " << id << endl << endl;
 }
 
 /*Hides or shows gui element.
-Parameters: set to true if hiding*/
+Parameters: set to true if visible*/
 void GuiBox::setVisible(bool b) 
 {
 	visible = b;
 	for (unsigned int i = 0; i < childList.size(); ++i)
 	{
-		childList[i].setVisible(b);
+		childList[i]->setVisible(b);
 	}
 }
 
@@ -47,217 +44,35 @@ void GuiBox::drawGui()
 	//cout << "test dimensions: " << dimensions.get_x() << " " << dimensions.get_y() << endl << endl;
 	//cout << "test position: " << position.get_x() << " " << position.get_y() << endl << endl;
 	//cout << "test scale: " << scale.get_x() << " " << scale.get_y() << endl << endl;
-	//cout << "drawing" << endl;
-	/*
-	al_draw_scaled_bitmap(bmp,
-	0, 0,
-	dimen.get_x(), dimen.get_y(),
-	minPos.get_x(), minPos.get_y(),
-	dimen.get_x() * scale.get_x(), dimen.get_y() * scale.get_y(),
-	0);
-	*/
 	al_draw_bitmap(bmp, minPos.get_x(), minPos.get_y(), 0);
 	//draw cursor if neccessary
 	if (hasCursor)
 	{
-		if (cursor == NULL) // default cursor
-		{
-			al_draw_filled_rectangle(minPos.get_x() - 5, minPos.get_y() - 5,
-				minPos.get_x() + 15,
-				minPos.get_y() + 15,
-				al_map_rgb(211, 124, 183));
-		}
-		else //custom cursor
-		{
-
-		}
+		al_draw_filled_rectangle(minPos.get_x() - 5, minPos.get_y() - 5,
+			minPos.get_x() + 15,
+			minPos.get_y() + 15,
+			al_map_rgb(211, 124, 183));
 	}
-
-	//cout << "finished drawing" << endl;
-}
-
-/*Reset interface to original values*/
-void GuiBox::resetInterface()
-{
-	
-}
-
-/*Install activate handler for this box, by adding to the handlerList
-Parameters: handler type, optional key that handler is responsible for, 
-control set to true if handler type can be enabled or disabled manually
-false if enabled only during visible=true*/
-void GuiBox::installHandler(const unsigned int type, const unsigned int key, const bool control)
-{
-	if (control) controlHandlerList[key] = make_pair(control, type);
-	else handlerList[key] = type;
-}
-
-/*Set an existing specific control handler to true or false
-Parameters: control handler type, control handler key, set the control handler to true/false*/
-void GuiBox::setControlHandle(const unsigned int type, const unsigned int key, const bool active)
-{
-	std::map<int, pair<bool, int> >::iterator it = controlHandlerList.find(key);
-	if (it != controlHandlerList.end())
+	//recursively draw its children
+	for (unsigned int i = 0; i < childList.size(); ++i)
 	{
-		it->second.first = active;
-	}
-}
-
-/*Installs gui with cursur. Fills transition grid with children ids
-Parameter: n by n size of grid, whether cursor should horizontally, whether cursor should vertically*/
-void GuiBox::installCursor(unsigned int size, bool wh, bool wv)
-{
-	if (size == 0 || size == 1)
-	{
-		cerr << "Error with installing cursor: Size of transition grid cannot be " << size << ". " << endl;
-		return;
+		childList[i]->drawGui();
 	}
 
-	//init transition grid
-	vector<unsigned int> v;
-	for (unsigned int i = 0; i < size; ++i)
-	{
-		transitionGrid.push_back(v);
-	}
-
-	//fill transition grid
-	unsigned int j = 0;
-	for (unsigned int i = 0; i < size; ++i)
-	{
-		//cout << j << endl;
-		for (unsigned k = 0; j < childList.size() && k < size; ++k)
-		{
-			transitionGrid[i].push_back(childList[j].gui_id);
-			++j;
-		}
-	}
-
-	//default cursor always at 0x0
-	childList[0].hasCursor = true;
-	cursorPos.set(0, 0);
-	installHandler(MoveCursor, ALLEGRO_KEY_LEFT, false);
-	installHandler(MoveCursor, ALLEGRO_KEY_RIGHT, false);
-	installHandler(MoveCursor, ALLEGRO_KEY_UP, false);
-	installHandler(MoveCursor, ALLEGRO_KEY_DOWN, false);
-
-	wrapVertical = wv;
-	wrapHorizontal = wh;
-	
-}
-
-/*Check all handlers to see if event has occured.
-Parameters: key that was pressed this tick, status variable that may be returned*/
-void GuiBox::checkAllHandlers(const unsigned int key, unsigned int &status)
-{
-	//if no keys exist in both handler lists, return
-	if (handlerList.count(key) == 0 && controlHandlerList.count(key) == 0) return;
-
-	//check control list
-	for (map<int, pair <bool, int> >::iterator it = controlHandlerList.begin(); it != controlHandlerList.end(); it++)
-	{
-		//if key matches and handler is active
-		if (it->first == key && it->second.first)
-		{
-			//check if this map element matches the inputted key
-			if (it->first == key)
-			{
-				//cout << it->second.second << endl;
-				switch (it->second.second)
-				{
-				case Activate:
-					setVisible(!getVisible());
-					if (isInterface)
-					{
-						if (getVisible()) status = SetNewInterface;
-						else status = InterfaceDeactivated;
-					}
-					break;
-				default:
-					cerr << "Invalid GUI control handler event." << endl;
-				}
-				return;
-			}
-		}
-	}
-
-	//check handler list, but make sure this gui is active
-	for (map<int, int>::iterator it = handlerList.begin(); visible && it != handlerList.end(); it++)
-	{
-		//check if this map element matches the inputted key
-		if (it->first == key)
-		{
-			switch (it->second)
-			{
-			case Activate:
-				setVisible(false);
-				if (isInterface) status = InterfaceDeactivated;
-				break;
-			case MoveCursor:
-				//find current cursor
-				for (unsigned int i = 0; i < childList.size(); ++i)
-				{
-					if (childList[i].hasCursor)
-					{
-						changeCursor(i, key);
-						//exit loop
-						i = childList.size();
-					}
-				}
-				break;
-			case GuiTransition:
-				break;
-			default:
-				cerr << "Invalid GUI handler event." << endl;
-			}
-			return;
-		}
-	}
 }
 
 //----------------------------PROTECTED----------------------------//
 
+/*Adds child gui to a GuiBox, given the offset
+Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
+void GuiBox::addChild(const Position offset, const Position scaleModifier, const std::string path)
+{
+	Position p(minPos.get_x() + offset.get_x(), minPos.get_y() + offset.get_y());
+	Position s(scale.get_x() * scaleModifier.get_x(), scale.get_y() * scaleModifier.get_y());
+
+	GuiBox* child = new GuiBox(buffer, p, s, path, childList.size(), this);
+	childList.push_back(child);
+}
+
 
 //----------------------------PRIVATE----------------------------//
-
-/*Change which child now has the cursor.
-Parameters: index of child that currently has the cursor, key that was pressed*/
-void GuiBox::changeCursor(unsigned int index, unsigned int key)
-{
-	int x = cursorPos.get_x();
-	int y = cursorPos.get_y();
-	int tempx = x;
-	int tempy = y;
-	cout << "Last pos: " << x << " " << y << endl;
-	childList[transitionGrid[x][y]].hasCursor = false;
-	switch (key)
-	{
-	case ALLEGRO_KEY_UP:
-		if (x - 1 != -1) x--;
-		else if (wrapVertical) x = transitionGrid.size() - 1;
-		break;
-	case ALLEGRO_KEY_RIGHT:
-		if (y + 1 != transitionGrid.size()) y++;
-		else if (wrapHorizontal) y = 0;
-		break;
-	case ALLEGRO_KEY_DOWN:
-		if (x + 1 != transitionGrid.size()) x++;
-		else if (wrapVertical) x = 0;
-		break;
-	case ALLEGRO_KEY_LEFT:
-		if (y - 1 != -1) y--;
-		else if (wrapHorizontal) y = transitionGrid.size() - 1;
-		break;
-	}
-	
-	//check if there was a change in cursor
-	if (tempx == x && tempy == y)
-	{
-		childList[transitionGrid[x][y]].hasCursor = true;
-	}
-	else
-	{
-		childList[transitionGrid[x][y]].hasCursor = true;
-		cursorPos.set(x, y);
-	}
-	cout << "current cursor pos: " << x << " " << y << endl << endl;
-}

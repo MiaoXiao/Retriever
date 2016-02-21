@@ -228,18 +228,16 @@ int main(int argc, char** argv)
 
 	float widthDifference = (WINDOWWIDTH - SCREENWIDTH) / 2;
 	float heightDifference = (WINDOWHEIGHT - SCREENHEIGHT) / 2;
+
 	//cout << "hd: " << heightDifference << endl;
 	Position p((SCREENWIDTH / 12) + widthDifference, (SCREENHEIGHT / 12) + heightDifference);
-	
-	/*
-	cout << "Screenw: " << SCREENWIDTH << endl;
-	cout << "Screenh: " << SCREENHEIGHT << endl;
-	cout << "Windoww: " << WINDOWWIDTH << endl;
-	cout << "Windowh: " << WINDOWHEIGHT << endl;
-	*/
 	Position s(.75, .75);
 	guimanager.createInterface(p, s, "Images/gui.jpg", 0);
-	
+
+	p.set((SCREENWIDTH / 2) + widthDifference, (SCREENHEIGHT / 2) + heightDifference);
+	s.set(.75, .75);
+	guimanager.createInterface(p, s, "Images/gui.jpg", 1);
+
 	al_start_timer(timer);
 	while (!done)
 	{

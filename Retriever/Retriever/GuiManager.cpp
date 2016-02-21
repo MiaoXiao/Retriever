@@ -7,9 +7,7 @@ using namespace std;
 
 /*CONSTRUCTOR:*/
 GuiManager::GuiManager(ALLEGRO_BITMAP* buffer)
-	:buffer(buffer), activeInterfaceId(NULL)
-{
-}
+	:buffer(buffer){}
 
 /*Create Interface for permanent use.
 Parameters: position of bitmap, scale of bitmap, path of bitmap, which menu to build*/
@@ -18,46 +16,65 @@ void GuiManager::createInterface(
 	const string path,
 	const unsigned int menu)
 {
-	cout << "Creating new interface" << endl;
-	GuiBox interface(buffer, p, s, path, allInterfaceList.size(), true);
+	GuiInterface interface(buffer, p, s, path, allInterfaceList.size());
 
 	//Menu test
 	switch (menu)
 	{
 	case 0:
+	{
 		//cout << "creating first child: " << endl;
 		//create child
 		Position offset(interface.dimen.get_x() / 8, interface.dimen.get_y() / 8);
 		Position s(0.2, 0.25);
-		addChild(interface, offset, s, path);
+		interface.addChild(offset, s, path);
 
 		//cout << "creating second child: " << endl;
 		//create child
 		Position offset2(interface.dimen.get_x() / 1.5, interface.dimen.get_y() / 8);
 		Position s2(0.2, 0.25);
-		addChild(interface, offset2, s2, path);
+		interface.addChild(offset2, s2, path);
 
 		//create child
 		Position offset3(interface.dimen.get_x() / 8, interface.dimen.get_y() / 1.5);
 		Position s3(0.2, 0.25);
-		addChild(interface, offset3, s3, path);
-		
+		interface.addChild(offset3, s3, path);
+
 		//create child
 		Position offset4(interface.dimen.get_x() / 1.5, interface.dimen.get_y() / 1.5);
 		Position s4(0.2, 0.25);
-		addChild(interface, offset4, s4, path);
-		
+		interface.addChild(offset4, s4, path);
+
 		//add activate handler
 		interface.installHandler(Activate, ALLEGRO_KEY_I, true);
-		
+
+		//add cursor
+		//interface.installCursor(2, false, false);
+		break;
+	}
+	case 1:
+	{
+		//create child
+		Position testoffset(interface.dimen.get_x() / 8, interface.dimen.get_y() / 8);
+		Position tests(0.2, 0.25);
+		interface.addChild(testoffset, tests, path);
+
+		//cout << "creating second child: " << endl;
+		//create child
+		Position testoffset2(interface.dimen.get_x() / 1.5, interface.dimen.get_y() / 8);
+		Position tests2(0.2, 0.25);
+		interface.addChild(testoffset2, tests2, path);
+
 		//add cursor
 		interface.installCursor(2, false, false);
+		interface.installHandler(Activate, ALLEGRO_KEY_Q, true);
 		break;
+	}
 	}
 	allInterfaceList.push_back(interface);
 }
 
-/*Draw all interfaces and its children.*/
+/*Draw all interfaces.*/
 void GuiManager::drawInterfaces()
 {
 	for (unsigned int i = 0; i < allInterfaceList.size(); ++i)
@@ -66,57 +83,23 @@ void GuiManager::drawInterfaces()
 		{
 			//cout << "drawing interface" << endl;
 			allInterfaceList[i].drawGui();
-			//cout << interfaceList[i].childList.size() << endl;
-			for (unsigned int j = 0; j < allInterfaceList[i].childList.size(); ++j)
-			{
-				//cout << "checking child" << endl;
-				if (allInterfaceList[i].childList[j].getVisible())
-				{
-					allInterfaceList[i].childList[j].drawGui();
-				}
-			}
 		}
 	}
 }
 
-/*Handle all keyboard events for every valid interface and its children
+/*Handle all keyboard events for every interface
 Parameter: Key that was pressed this tick*/
 void GuiManager::handleGuiEvents(const unsigned int key)
 {
 	unsigned int status;
+	int newid;
 	for (unsigned int i = 0; i < allInterfaceList.size(); ++i)
 	{
+		//cout << "checking events for interface: " << allInterfaceList[i].gui_id << endl;
 		status = 0;
-		allInterfaceList[i].checkAllHandlers(key, status);
-		checkStatus(status, allInterfaceList[i]);
-		for (unsigned int j = 0; j < allInterfaceList[i].childList.size(); ++j)
-		{
-			status = 0;
-			allInterfaceList[i].childList[j].checkAllHandlers(key, status);
-			checkStatus(status, allInterfaceList[i].childList[j]);
-		}
+		newid = allInterfaceList[i].checkAllHandlers(key, status);
+		checkStatus(status, newid, allInterfaceList[i]);
 	}
-}
-
-/*Adds child gui to a GuiBox, given the offset
-Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
-void GuiManager::addChild(GuiBox &parent, const Position offset, const Position scale, const std::string path)
-{
-	cout << "Adding child" << endl;
-	Position p(parent.minPos.get_x() + offset.get_x(), parent.minPos.get_y() + offset.get_y());
-	//cout << "position_x: " << parent.position.get_x() << " + " << offset.get_x() << endl;
-	//cout << "position_y: " << parent.position.get_y() << " + " << offset.get_y() << endl;
-	Position s(parent.scale.get_x() * scale.get_x(), parent.scale.get_y() * scale.get_y());
-	//cout << "scale_x: " << parent.scale.get_x() << " * " << scale.get_x() << endl;
-	//cout << "scale_y: " << parent.scale.get_y() << " * " << scale.get_y() << endl;
-
-	GuiBox child(buffer, p, s, path, parent.childList.size(), false);
-	parent.childList.push_back(child);
-
-	child.parent = &parent;
-	cout << "Done adding Child" << endl;
-	//sif (parent.childList[parent.childList.size() - 1]->getVisible()) cout << "dont " << endl;
-	//cout << "child size: " << parent.childList.size() << endl;
 }
 
 //----------------------------PROTECTED----------------------------//
@@ -124,19 +107,27 @@ void GuiManager::addChild(GuiBox &parent, const Position offset, const Position 
 //----------------------------PRIVATE----------------------------//
 
 /* Checks return status, based on the handler
-Parameters: current status, guibox that caused the status change
-*/
-void GuiManager::checkStatus(const unsigned int status, const GuiBox guibox)
+Parameters: current status, guibox that caused the status change*/
+void GuiManager::checkStatus(const unsigned int status, const int newid, GuiInterface &gui)
 {
 	//if status == 0, no status to check
 	if (status == 0) return;
 	switch (status)
 	{
 	case SetNewInterface:
-		activeInterfaceId = guibox.gui_id;
+		activeInterface = &(allInterfaceList[gui.gui_id]);
 		break;
 	case InterfaceDeactivated:
-		activeInterfaceId = NULL;
+		activeInterface = NULL;
+		break;
+	case InterfaceChange:
+		if (newid == -1)
+		{
+			cerr << "No interface to switch to specified. Error!" << endl;
+			return;
+		}
+		activeInterface = &(allInterfaceList[newid]);
+		activeInterface->setVisible(true);
 		break;
 	default:
 		cerr << "Invalid handler status was returned." << endl;

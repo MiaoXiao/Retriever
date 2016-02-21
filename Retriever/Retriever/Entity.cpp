@@ -31,10 +31,10 @@ Parameters: name of path. name of file
 Returns: pointer to bitmap*/
 void Entity::loadImage(const string path)
 {
-	cout << "Loading Image" << endl;
+	//cout << "Loading Image" << endl;
 	ALLEGRO_BITMAP *loaded_bmp, *prev_target;
 
-	cout << "Load original bitmap" << endl;
+	//cout << "Load original bitmap" << endl;
 	//load original bitmap
 	loaded_bmp = al_load_bitmap(path.c_str());
 	if (!loaded_bmp)
@@ -44,7 +44,7 @@ void Entity::loadImage(const string path)
 		exit(1);
 	}
 
-	cout << "Create resized bitmap" << endl;
+	//cout << "Create resized bitmap" << endl;
 	//create template for resized bitmap
 	bmp = al_create_bitmap(al_get_bitmap_width(loaded_bmp) * scale.get_x(), al_get_bitmap_height(loaded_bmp) * scale.get_y());
 	if (!bmp)
@@ -58,7 +58,7 @@ void Entity::loadImage(const string path)
 	prev_target = al_get_target_bitmap();
 	al_set_target_bitmap(bmp);
 
-	cout << "Copying over bitmap" << endl;
+	//cout << "Copying over bitmap" << endl;
 	//copy the loaded bitmap to the resized bmp
 	al_draw_scaled_bitmap(loaded_bmp,
 		0, 0,                                // source origin
@@ -77,7 +77,7 @@ void Entity::loadImage(const string path)
 	//set new scaled dimensions
 	dimen.set(al_get_bitmap_width(bmp), al_get_bitmap_height(bmp));
 	
-	cout << "End load image" << endl;
+	//cout << "End load image" << endl;
 }
 
 //----------------------------PRIVATE----------------------------//
