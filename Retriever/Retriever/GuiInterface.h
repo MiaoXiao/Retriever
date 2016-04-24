@@ -1,9 +1,27 @@
 #pragma once
 #include "GuiBox.h"
+#include "GuiButton.h"
+
+#include <allegro5/allegro5.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
+
+#include <iostream>
+#include <map>
+#include <vector>
+#include <string>
+//Handler Types
+enum HandlerType { Activate, MoveCursor, GuiTransition };
+
+/*Status Return Types
+SetNewInterface: Determines that this gui is now the new active interface
+InterfaceDeactivated: This gui interface was deactivated
+InterfaceChange: interface is changing to another*/
+enum StatusType { SetNewInterface = 1, InterfaceDeactivated, InterfaceChange };
 
 /*A generic menu, contains child guiboxes, buttons, and fonts.
 Can install handlers which allow events to occur within interface*/
-class GuiInterface: public GuiBox
+class GuiInterface
 {
 public:
 	/*CONSTRUCTOR:*/
@@ -34,10 +52,19 @@ public:
 	Returns: return id if applicable, otherwise return -1*/
 	int checkAllHandlers(const unsigned int key, unsigned int &status);
 
+	void addChild(const unsigned int guitype, const Position offset, const Position scaleModifier, const std::string path);
+
+	//Draw all of the interface's objects
+	void drawUI();
+
+	//Parent box of interface
+	GuiBox interface;
+
+	//Stores gui elements
+	std::vector<GuiBox> boxList;
+	std::vector<GuiButton> buttonList;
 
 private:
-	//cursor picture
-	ALLEGRO_BITMAP* cursor;
 	//grid for switching cursor
 	std::vector< std::vector<unsigned int> > cursorGrid;
 	//Position in grid where cursor is located

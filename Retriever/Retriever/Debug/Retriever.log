@@ -1,7 +1,3 @@
-﻿  GuiBox.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Main.cpp
-  GuiManager.cpp
-  GuiInterface.cpp
-  Retriever.vcxproj -> C:\Users\Rica.PENGIN\Documents\Visual Studio 2015\Projects\Retriever\Retriever\Debug\Retriever.exe
+﻿  GuiInterface.cpp
+GuiInterface.obj : error LNK2019: unresolved external symbol "public: __thiscall GuiBox::GuiBox(void)" (??0GuiBox@@QAE@XZ) referenced in function "public: __thiscall GuiInterface::GuiInterface(struct ALLEGRO_BITMAP *,struct Position,struct Position,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,unsigned int)" (??0GuiInterface@@QAE@PAUALLEGRO_BITMAP@@UPosition@@1V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z)
+C:\Users\Rica.PENGIN\Documents\Visual Studio 2015\Projects\Retriever\Retriever\Debug\Retriever.exe : fatal error LNK1120: 1 unresolved externals

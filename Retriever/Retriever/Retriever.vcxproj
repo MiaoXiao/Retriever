@@ -156,6 +156,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GuiBox.cpp" />
+    <ClCompile Include="GuiButton.cpp" />
     <ClCompile Include="GuiInterface.cpp" />
     <ClCompile Include="GuiManager.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GuiBox.h" />
+    <ClInclude Include="GuiButton.h" />
     <ClInclude Include="GuiInterface.h" />
     <ClInclude Include="GuiManager.h" />
     <ClInclude Include="Player.h" />

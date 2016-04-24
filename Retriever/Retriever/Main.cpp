@@ -224,6 +224,7 @@ int main(int argc, char** argv)
 		}
 	}*/
 
+	/*
 	GuiManager guimanager(buffer);
 
 	float widthDifference = (WINDOWWIDTH - SCREENWIDTH) / 2;
@@ -237,7 +238,7 @@ int main(int argc, char** argv)
 	p.set((SCREENWIDTH / 2) + widthDifference, (SCREENHEIGHT / 2) + heightDifference);
 	s.set(.75, .75);
 	guimanager.createInterface(p, s, "Images/gui.jpg", 1);
-
+	*/
 	al_start_timer(timer);
 	while (!done)
 	{
@@ -259,7 +260,8 @@ int main(int argc, char** argv)
 				case ALLEGRO_KEY_R:
 					break;
 				default:
-					guimanager.handleGuiEvents(events.keyboard.keycode);
+					//guimanager.handleGuiEvents(events.keyboard.keycode);
+					break;
 				}
 				break;
 			case ALLEGRO_EVENT_MOUSE_AXES:
@@ -286,7 +288,7 @@ int main(int argc, char** argv)
 
 			// Draw these Objects
 			al_draw_bitmap(drawing, SCREENWIDTH / 2, SCREENHEIGHT / 2, 0);
-			guimanager.drawInterfaces();
+			//guimanager.drawInterfaces();
 
 			//render back display
 			al_set_target_backbuffer(DISPLAY);

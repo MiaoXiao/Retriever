@@ -72,7 +72,7 @@ void Entity::loadImage(const string path)
 
 	//restore target bitmap
 	al_set_target_bitmap(prev_target);
-	//al_destroy_bitmap(loaded_bmp);
+	al_destroy_bitmap(loaded_bmp);
 	
 	//set new scaled dimensions
 	dimen.set(al_get_bitmap_width(bmp), al_get_bitmap_height(bmp));

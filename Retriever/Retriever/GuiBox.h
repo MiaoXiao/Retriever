@@ -10,25 +10,22 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 
-//Handler Types
-enum HandlerType {Activate, MoveCursor, GuiTransition};
+/*Type of gui*/
+enum GuiType {Box, Button};
 
-/*Status Return Types
-SetNewInterface: Determines that this gui is now the new active interface
-InterfaceDeactivated: This gui interface was deactivated
-InterfaceChange: interface is changing to another*/
-enum StatusType {SetNewInterface = 1, InterfaceDeactivated, InterfaceChange};
+class GuiButton;
 
 /*Basic gui element*/
 class GuiBox: public Entity
 {
 public:
-	/*CONSTRUCTOR: Set status of interface, pass off vars to Entity*/
+	/*CONSTRUCTOR: Default constructor*/
+	GuiBox();
+	/*CONSTRUCTOR: Parent is interface*/
 	GuiBox(ALLEGRO_BITMAP* buffer,
 		const Position p, const Position s,
 		const std::string path,
-		const unsigned int id,
-		GuiBox* parent);
+		const unsigned int id);
 
 	/*Hides or shows gui element.
 	Parameters: set to true if visible*/
@@ -37,23 +34,21 @@ public:
 	bool getVisible() const;
 
 	/*Draw this Gui Box*/
-	void drawGui();
+	virtual void drawGui();
 	
 	//id of gui element
-	int gui_id;
+	unsigned int gui_id;
+
 	//pointer to parent
-	GuiBox *parent;
+	//GuiBox *parent_box;
+	//GuiInterface *parent_interface;
 
-	//does this box have the cursor?
-	bool hasCursor;
-
-	/*Adds a new child gui to this GuiBox, given the offset
-	Parameter: Parent gui, Offset to place child element, scale of new child, filename*/
-	void addChild(const Position offset, const Position scaleModifier, const std::string path);
+	//list of all valid pointers to buttons
+	std::vector<GuiButton*> buttonList;
+	//List of pointers to boxes that belong to this interface
+	std::vector<GuiBox*> childList;
 
 protected:
-	//List of pointers to children that belong to this interface
-	std::vector<GuiBox*> childList;
 
 private:
 	//draw buffer
